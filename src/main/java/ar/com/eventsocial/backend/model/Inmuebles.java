@@ -2,6 +2,8 @@ package ar.com.eventsocial.backend.model;
 
 import java.sql.Date;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Inmuebles {
@@ -69,14 +71,20 @@ public class Inmuebles {
 	@JsonProperty("dj")
 	private Boolean dj;
 
-	
+	@JsonProperty("file")
+	private MultipartFile multipartFile;
 
 	/*----- SETTER AND GETTER-----*/
-	
-	
-	
 	public String getTitulo() {
 		return titulo;
+	}
+
+	public MultipartFile getMultipartFile() {
+		return multipartFile;
+	}
+
+	public void setMultipartFile(MultipartFile multipartFile) {
+		this.multipartFile = multipartFile;
 	}
 
 	public void setTitulo(String titulo) {

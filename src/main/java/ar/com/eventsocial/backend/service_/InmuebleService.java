@@ -1,5 +1,7 @@
 package ar.com.eventsocial.backend.service_;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +15,7 @@ import ar.com.eventsocial.backend.model.Inmueble;
 import ar.com.eventsocial.backend.model.Inmuebles;
 import ar.com.eventsocial.backend.model.Servicios;
 import ar.com.eventsocial.backend.repository.contract.IInmuebleRepository;
+import ar.com.eventsocial.backend.repository_.StorageRepository;
 import ar.com.eventsocial.backend.service.contract.IInmubleService;
 
 @Service("InmuebleService")
@@ -107,6 +110,29 @@ public class InmuebleService implements IInmubleService {
 		response.setCode("200");
 		response.setMessage("Se guardo con exito el inmueble");
 
+		
+		StorageRepository test =new StorageRepository();
+		
+		
+		
+		
+		try {
+			File a = test.convertToFile(datosInmueble.getMultipartFile(), "test");
+			test.subirImagen(a, "test");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		return response;
 	}
 

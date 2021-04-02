@@ -1,19 +1,20 @@
 package ar.com.eventsocial.backend.service_;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import ar.com.eventsocial.backend.dto.RegisterResponseDTO;
+import ar.com.eventsocial.backend.logs.LogMaker;
 import ar.com.eventsocial.backend.model.Login;
 import ar.com.eventsocial.backend.repository.contract.ILoginRepository;
-import ar.com.eventsocial.backend.repository_.StorageRepository;
 import ar.com.eventsocial.backend.security.jwt.JwtTokenUtil;
 import ar.com.eventsocial.backend.service.contract.ILoginService;
 
@@ -28,6 +29,8 @@ public class LoginService implements ILoginService {
 
 	@Autowired /* interface UserDetailsService */
 	private UserDetailsService jwtInMemoryUserDetailsService;
+
+	private static final LogMaker logger = new LogMaker();
 
 	@Override
 	public RegisterResponseDTO authenticate(String username, String password, String ipFromRequest) {
@@ -61,9 +64,11 @@ public class LoginService implements ILoginService {
 
 		try {
 			userDetails = jwtInMemoryUserDetailsService.loadUserByUsername(username);
+			logger.infoRecibe("LoginService", "loadUserByUsername");
 		} catch (Exception e) {
-			System.out.println("lala");
+			logger.ErrorRecibe("LoginService", "authenticate", e.getMessage());
 		}
+
 		// recuperamos nuevamente, desde la base de datos.. la info del usuario asociado
 		// al username
 
@@ -79,22 +84,6 @@ public class LoginService implements ILoginService {
 		response_.setMessage("Se logeo correctamente");
 		response_.setSessionEnc(token);
 
-		
-		StorageRepository test = new StorageRepository();
-		
-		try {
-			test.Connection();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		
-		
-		
-		
-		
 		return response_;
 	}
 

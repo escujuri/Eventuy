@@ -24,6 +24,8 @@ import ar.com.eventsocial.backend.service.contract.ILoginService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+
+
 @CrossOrigin
 @RestController
 @RequestMapping(value = "v1/login", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -36,6 +38,7 @@ public class JwtLoginControllerV1 {
 	@Autowired
 	private ILoginService loginService;
 
+	@CrossOrigin
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST, produces = "application/json")
 	@ApiOperation(value = "")
 	@ResponseBody
