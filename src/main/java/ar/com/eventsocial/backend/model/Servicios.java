@@ -17,9 +17,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "Servicios")
 public class Servicios extends GenericEntity<Long> {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -27,7 +24,6 @@ public class Servicios extends GenericEntity<Long> {
 	@Column(name = "id")
 	private Long id;
 
-	
 	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "inmueble_id")

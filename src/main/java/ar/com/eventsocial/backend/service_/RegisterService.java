@@ -31,7 +31,7 @@ public class RegisterService implements IRegisterService {
 		RegisterResponseDTO response = new RegisterResponseDTO();
 
 		Login login = new Login();
-		
+
 		Usuario user = new Usuario();
 
 		login.setUser_(username);

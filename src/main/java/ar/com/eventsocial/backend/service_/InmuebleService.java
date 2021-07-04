@@ -80,7 +80,7 @@ public class InmuebleService implements IInmubleService {
 		nuevoInmueble.setPuntuacion(datosInmueble.getPuntuacion());
 		nuevoInmueble.setTipoLugar(datosInmueble.getTipoLugar());
 		nuevoInmueble.setTitulo(datosInmueble.getTitulo());
-		nuevoInmueble.setUbicacion(datosInmueble.getUbicacion());
+	//	nuevoInmueble.setUbicacion(datosInmueble.getUbicacion());
 		nuevoInmueble.setHabilitado(true);
 
 		Servicios servicio = new Servicios();
@@ -159,7 +159,7 @@ public class InmuebleService implements IInmubleService {
 		nuevoInmueble.setPuntuacion(datosInmueble.getPuntuacion());
 		nuevoInmueble.setTipoLugar(datosInmueble.getTipoLugar());
 		nuevoInmueble.setTitulo(datosInmueble.getTitulo());
-		nuevoInmueble.setUbicacion(datosInmueble.getUbicacion());
+	//	nuevoInmueble.setUbicacion(datosInmueble.getUbicacion());
 		nuevoInmueble.setHabilitado(true);
 
 		/* Se carga los servicios del inmueble */

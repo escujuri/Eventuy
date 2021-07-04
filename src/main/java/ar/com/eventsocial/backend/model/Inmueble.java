@@ -1,7 +1,5 @@
 package ar.com.eventsocial.backend.model;
 
-
-
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -16,17 +14,19 @@ import javax.persistence.NamedNativeQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-@NamedNativeQueries({
-	@NamedNativeQuery(name = Inmueble.FIND_PROPERTY_BY_IDUSER, query = "select *"
-			+ "  from Inmuebles" 
-			+ "  where idOriginante = ?", resultClass = Inmueble.class),
-	
-	@NamedNativeQuery(name = Inmueble.DOWN_PROPERTY_BY_IDUSER, query = "Update"
-			+ "  Inmuebles set inmuebleHabilitado = 0 " 
-			+ "  Where idOriginante = ?"
-			+ "  and id = ?", resultClass = Inmueble.class)
-})
+import com.google.api.client.util.DateTime;
 
+@NamedNativeQueries({
+		@NamedNativeQuery(name = Inmueble.FIND_PROPERTY_BY_IDUSER, query = "select *" + "  from Inmuebles"
+				+ "  where idOriginante = ?", resultClass = Inmueble.class),
+
+		@NamedNativeQuery(name = Inmueble.DOWN_PROPERTY_BY_IDUSER, query = "Update"
+				+ "  Inmuebles set inmuebleHabilitado = 0 " + "  Where idOriginante = ?"
+				+ "  and id = ?", resultClass = Inmueble.class),
+
+		@NamedNativeQuery(name = Inmueble.SEACH_BY_WORD, query = "select * from inmuebles where"
+				+ "titulo LIKE '%?%' OR" + "ciudad LIKE '%?%' OR" + "localidad LIKE '%?%' OR"
+				+ "provincia LIKE '%?%'	OR" + "calle LIKE '%?%' limit 8", resultClass = Inmueble.class) })
 
 @Entity
 @Table(name = "Inmuebles")
@@ -35,8 +35,10 @@ public class Inmueble extends GenericEntity<Long> {
 	public static final String FIND_PROPERTY_BY_IDUSER = "buscarInmueblesByUserID";
 
 	public static final String DOWN_PROPERTY_BY_IDUSER = "desHabilitarInmueblesByUserID";
+
+	public static final String SEACH_BY_WORD = "inmueblesByWord";
+
 	/**
-	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -47,18 +49,24 @@ public class Inmueble extends GenericEntity<Long> {
 
 	@Column(name = "idOriginante")
 	private Long idOriginante;
-	
+
 	@Column(name = "titulo")
 	private String titulo;
 
 	@Column(name = "tipoLugar")
 	private String tipoLugar;
 
-	@Column(name = "ubicacion")
-	private String ubicacion;
+	@Column(name = "latitud")
+	private String latitud;
+
+	@Column(name = "longitud")
+	private String longitud;
 
 	@Column(name = "calle")
 	private String calle;
+
+	@Column(name = "cp")
+	private String cp;
 
 	@Column(name = "altura")
 	private Integer altura;
@@ -93,9 +101,15 @@ public class Inmueble extends GenericEntity<Long> {
 	@Column(name = "fechaPublicacion")
 	private Date fechaPublicacion;
 
+	@Column(name = "horarioDesde")
+	private DateTime horarioDesde;
+
+	@Column(name = "horarioHasta")
+	private DateTime horarioHasta;
+
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "inmueble")
 	private Servicios servicios;
-	
+
 	@Column(name = "inmuebleHabilitado")
 	private Boolean habilitado;
 
@@ -140,14 +154,6 @@ public class Inmueble extends GenericEntity<Long> {
 
 	public void setTipoLugar(String tipoLugar) {
 		this.tipoLugar = tipoLugar;
-	}
-
-	public String getUbicacion() {
-		return ubicacion;
-	}
-
-	public void setUbicacion(String ubicacion) {
-		this.ubicacion = ubicacion;
 	}
 
 	public String getCalle() {
@@ -249,13 +255,53 @@ public class Inmueble extends GenericEntity<Long> {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	
+
 	public Boolean getHabilitado() {
 		return habilitado;
 	}
 
 	public void setHabilitado(Boolean habilitado) {
 		this.habilitado = habilitado;
+	}
+
+	public String getLatitud() {
+		return latitud;
+	}
+
+	public void setLatitud(String latitud) {
+		this.latitud = latitud;
+	}
+
+	public String getLongitud() {
+		return longitud;
+	}
+
+	public void setLongitud(String longitud) {
+		this.longitud = longitud;
+	}
+
+	public String getCp() {
+		return cp;
+	}
+
+	public void setCp(String cp) {
+		this.cp = cp;
+	}
+
+	public DateTime getHorarioDesde() {
+		return horarioDesde;
+	}
+
+	public void setHorarioDesde(DateTime horarioDesde) {
+		this.horarioDesde = horarioDesde;
+	}
+
+	public DateTime getHorarioHasta() {
+		return horarioHasta;
+	}
+
+	public void setHorarioHasta(DateTime horarioHasta) {
+		this.horarioHasta = horarioHasta;
 	}
 
 	public Inmueble(Long id, Long idOriginante, String titulo, String tipoLugar, String ubicacion, String calle,
@@ -267,7 +313,6 @@ public class Inmueble extends GenericEntity<Long> {
 		this.idOriginante = idOriginante;
 		this.titulo = titulo;
 		this.tipoLugar = tipoLugar;
-		this.ubicacion = ubicacion;
 		this.calle = calle;
 		this.altura = altura;
 		this.localidad = localidad;
@@ -286,12 +331,13 @@ public class Inmueble extends GenericEntity<Long> {
 
 	@Override
 	public String toString() {
-		return "Inmueble [id=" + id + ", idOriginante=" + idOriginante + ", titulo=" + titulo + ", tipoLugar="
-				+ tipoLugar + ", ubicacion=" + ubicacion + ", calle=" + calle + ", altura=" + altura + ", localidad="
-				+ localidad + ", ciudad=" + ciudad + ", provincia=" + provincia + ", pais=" + pais + ", descripcion="
-				+ descripcion + ", precio=" + precio + ", puntuacion=" + puntuacion + ", maxPersonas=" + maxPersonas
-				+ ", fechaDisponibilidad=" + fechaDisponibilidad + ", fechaPublicacion=" + fechaPublicacion
-				+ ", servicios=" + servicios + ", habilitado=" + habilitado + "]";
+		return "Inmueble [id=" + id + ", idOriginante=" +   idOriginante + ", titulo=" + titulo + ", tipoLugar="
+				+ tipoLugar + ", latitud=" + latitud + ", longitud=" + longitud + ", calle=" + calle + ", cp=" + cp
+				+ ", altura=" + altura + ", localidad=" + localidad + ", ciudad=" + ciudad + ", provincia=" + provincia
+				+ ", pais=" + pais + ", descripcion=" + descripcion + ", precio=" + precio + ", puntuacion="
+				+ puntuacion + ", maxPersonas=" + maxPersonas + ", fechaDisponibilidad=" + fechaDisponibilidad
+				+ ", fechaPublicacion=" + fechaPublicacion + ", horarioDesde=" + horarioDesde + ", horarioHasta="
+				+ horarioHasta + ", servicios=" + servicios + ", habilitado=" + habilitado + "]";
 	}
 
 }

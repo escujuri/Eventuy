@@ -27,7 +27,7 @@ public class LoginService implements ILoginService {
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
-	@Autowired /* interface UserDetailsService */
+	@Autowired 
 	private UserDetailsService jwtInMemoryUserDetailsService;
 
 	private static final LogMaker logger = new LogMaker();
