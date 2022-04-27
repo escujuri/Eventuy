@@ -1,0 +1,59 @@
+package ar.com.eventsocial.backend.controller;
+
+import java.util.Objects;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import ar.com.eventsocial.backend.dto.RegisterResponseDTO;
+import ar.com.eventsocial.backend.security.jwt.JwtRequestStep1;
+import ar.com.eventsocial.backend.service.contract.IRegisterService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+@CrossOrigin
+@RestController
+@RequestMapping(value = "v1/register", produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+@Validated
+@Api(value = "", tags = "Registro de datos personales de los usuarios", protocols = "https")
+public class RegisterControllerV1 {
+
+	@Autowired
+	private IRegisterService registerService;
+
+	@RequestMapping(value = "/escribir/datos-personales", method = RequestMethod.POST, produces = "application/json")
+	@ApiOperation(value = "Recurso para escribir todos los datos personales. Retorno status 200 y json en Body response.")
+	@ResponseBody
+	public ResponseEntity<RegisterResponseDTO> RegisterStep1(HttpServletRequest request,
+			@RequestBody(required = true) @Validated JwtRequestStep1 jwtRequestStep1) throws Exception {
+
+		Objects.requireNonNull(jwtRequestStep1.getPassword());
+		Objects.requireNonNull(jwtRequestStep1.getEmail());
+		Objects.requireNonNull(jwtRequestStep1.getUsername());
+		
+		final RegisterResponseDTO _response = registerService.Step1(jwtRequestStep1);
+
+		return new ResponseEntity<RegisterResponseDTO>(_response, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/recuperar/datos-personales", method = RequestMethod.GET, produces = "application/json")
+	@ApiOperation(value = "Recurso para escribir todos los datos personales. Retorno status 200 y json en Body response.")
+	@ResponseBody
+	public ResponseEntity<RegisterResponseDTO> RegisterStep1(HttpServletRequest request) throws Exception {
+
+		final RegisterResponseDTO _response = registerService.Step1(null);
+
+		return new ResponseEntity<RegisterResponseDTO>(_response, HttpStatus.OK);
+	}
+
+}
