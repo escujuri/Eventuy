@@ -1,4 +1,4 @@
-package ar.com.eventsocial.backend.service_;
+package ar.com.eventsocial.backend.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import ar.com.eventsocial.backend.logs.LogMaker;
 import ar.com.eventsocial.backend.model.Login;
 import ar.com.eventsocial.backend.repository.contract.ILoginRepository;
 
@@ -19,8 +18,6 @@ import ar.com.eventsocial.backend.repository.contract.ILoginRepository;
 
 @Service
 public class JwtUserDetailsService implements UserDetailsService /* interface UserDetailsService */{
-
-	public static final LogMaker log = new LogMaker();
 
 	@Autowired
 	private ILoginRepository loginRepository;
@@ -34,9 +31,9 @@ public class JwtUserDetailsService implements UserDetailsService /* interface Us
 			throw new UsernameNotFoundException("Usuario no encontrado: " + username);
 		}
 		
-		Optional<Login> user = usuarios.stream()
-                .filter(u -> u.getUser_() != null 
-                			&& u.getUser_().equals(username))
+		Optional<Login> user = usuarios.stream() 
+                .filter(u -> u.getEmail()!= null 
+                			&& u.getEmail().equals(username))
                 .findAny();
 			
 		if (!user.isPresent()) {
@@ -46,7 +43,7 @@ public class JwtUserDetailsService implements UserDetailsService /* interface Us
 		Login persona = user.get(); // usuarios.get(0);
 
 
-    	return User.withUsername(persona.getUser_())
+    	return User.withUsername(persona.getEmail())
     	                   .password(persona.getPassword_())
     	                   .roles("USER").build();
     	

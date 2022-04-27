@@ -1,14 +1,15 @@
 package ar.com.eventsocial.backend.controller;
 
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,47 +18,42 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import ar.com.eventsocial.backend.dto.InmuebleResponseDTO;
-import ar.com.eventsocial.backend.dto.PagosResponseDTO;
-import ar.com.eventsocial.backend.logs.LogMaker;
+import ar.com.eventsocial.backend.dto.SocialResponseDTO;
 import ar.com.eventsocial.backend.model.GenericUtils;
-import ar.com.eventsocial.backend.model.MercadoPagoRequest;
+import ar.com.eventsocial.backend.model.SocialDto;
 import ar.com.eventsocial.backend.security.jwt.ITokenExtractor;
 import ar.com.eventsocial.backend.security.jwt.JwtTokenUtil;
-import ar.com.eventsocial.backend.service.contract.IPagoService;
-import ar.com.eventsocial.backend.service_.InmuebleService;
+import ar.com.eventsocial.backend.service.contract.ISocialService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@PreAuthorize("authenticated")
 @CrossOrigin
 @RestController
-@RequestMapping(value = "v1/cobranzas", produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "v1/social", produces = MediaType.APPLICATION_JSON_VALUE)
 @Validated
-@Api(value = "", tags = "Estos metodos realizan un ABM de los inmuebles", protocols = "https")
-public class JwtPagosV1 {
+@Api(value = "", tags = "Manaje toda la parte social y ranking", protocols = "https")
+public class JwtSocialController {
 
 	@Autowired
-	private IPagoService IpagoService;
-
+	private ISocialService socialService;
+	
 	@Autowired
 	@Qualifier("jwtHeaderTokenExtractor")
 	private ITokenExtractor tokenExtractor;
 
-	public static final LogMaker log = new LogMaker();
-
-
-	@PreAuthorize("hasRole('USER')")
-	@RequestMapping(value = "/pagarMP", method = RequestMethod.POST, produces = "application/json")
-	@ApiOperation(value = "Se realiza el pago via mercadolibre devolviendo")
+	@CrossOrigin
+	@RequestMapping(value = "/ranking", method = RequestMethod.POST, produces = "application/json")
+	@ApiOperation(value = "Recurso que escribe comentarios en inmuebles")
 	@ResponseBody
-	public ResponseEntity<PagosResponseDTO> RealizarPago(HttpServletRequest request,
-			@RequestBody(required = true) @Validated MercadoPagoRequest datosMP) throws Exception {
+	public ResponseEntity<SocialResponseDTO> PostRankingInmueble(HttpServletRequest request,
+			@RequestBody(required = true) @Validated SocialDto social) throws Exception {
 
-		log.infoRecibe("inmueble/guardar", null);
-
+		Objects.requireNonNull(social.getComment());
+		Objects.requireNonNull(social.getInmuebleId());
+		Objects.requireNonNull(social.getRanking());
+		
 		String userId = "";
-		String usuario = "";
+		String email = "";
 
 		String tokenPayload = tokenExtractor.Extract(request.getHeader(JwtTokenUtil.TOKEN_HEADER));
 		Map<String, Object> claims = tokenExtractor.ReadToken(tokenPayload);
@@ -66,22 +62,21 @@ public class JwtPagosV1 {
 			if (GenericUtils.getValueFromKeyValue(claims, "userId") != null) {
 				userId = GenericUtils.getValueFromKeyValue(claims, "userId").toString();
 			}
-			if (GenericUtils.getValueFromKeyValue(claims, "usuario") != null) {
-				usuario = GenericUtils.getValueFromKeyValue(claims, "usuario").toString();
+			if (GenericUtils.getValueFromKeyValue(claims, "email") != null) {
+				email = GenericUtils.getValueFromKeyValue(claims, "email").toString();
 			}
 		}
-
+	
 		try {
-			final PagosResponseDTO _response = IpagoService.pagarMP(datosMP);
-			return new ResponseEntity<PagosResponseDTO>(_response, HttpStatus.OK);
+			final SocialResponseDTO _response = socialService.PostRankingInmueble(social, userId);
+			return new ResponseEntity<SocialResponseDTO>(_response, HttpStatus.OK);
 
 		} catch (Exception e) {
-			PagosResponseDTO _response = new PagosResponseDTO();
+			SocialResponseDTO _response = new SocialResponseDTO();
 			_response.setCode("400");
 			_response.setMessage(e.getMessage());
-			return new ResponseEntity<PagosResponseDTO>(_response, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<SocialResponseDTO>(_response, HttpStatus.BAD_REQUEST);
 		}
-
 	}
 
 }

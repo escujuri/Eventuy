@@ -1,6 +1,7 @@
 package ar.com.eventsocial.backend.model;
 
 import java.io.Serializable;
+
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 

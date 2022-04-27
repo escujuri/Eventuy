@@ -1,4 +1,4 @@
-package ar.com.eventsocial.backend.repository_;
+package ar.com.eventsocial.backend.repository;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

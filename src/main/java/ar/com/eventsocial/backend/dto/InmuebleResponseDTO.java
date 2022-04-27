@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import ar.com.eventsocial.backend.model.Inmueble;
+import ar.com.eventsocial.backend.model.Inmuebles;
+import ar.com.eventsocial.backend.model.InmueblesReducido;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "code", "message" })
@@ -17,10 +19,12 @@ public class InmuebleResponseDTO {
 	@JsonProperty("message")
 	private String message;
 	@JsonProperty("inmuebles")
-	private List<Inmueble> inmuebles;
-	
+	private List<Inmuebles> inmuebles;
+	@JsonProperty("inmueble")
+	private Inmuebles inmueble;
+
 	/*---- GETTER SETTER----*/
-	
+
 	public String getCode() {
 		return code;
 	}
@@ -37,13 +41,19 @@ public class InmuebleResponseDTO {
 		this.message = message;
 	}
 
-	public List<Inmueble> getInmuebles() {
+	public List<Inmuebles> getInmuebles() {
 		return inmuebles;
 	}
 
-	public void setInmuebles(List<Inmueble> inmuebles) {
+	public void setInmuebles(List<Inmuebles> inmuebles) {
 		this.inmuebles = inmuebles;
 	}
 
+	public Inmuebles getInmueble() {
+		return inmueble;
+	}
 
+	public void setInmueble(Inmuebles inmueble) {
+		this.inmueble = inmueble;
+	}
 }

@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import ar.com.eventsocial.backend.logs.LogMaker;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -26,8 +25,6 @@ import io.jsonwebtoken.UnsupportedJwtException;
 public class JwtTokenUtil implements Serializable {
 
 	private static final Logger logger = LoggerFactory.getLogger(JwtTokenUtil.class);
-
-	public static final LogMaker log = new LogMaker();
 
 	private static final long serialVersionUID = -2550185165626007488L;
 	

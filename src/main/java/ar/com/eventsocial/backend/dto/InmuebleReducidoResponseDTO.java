@@ -1,20 +1,23 @@
 package ar.com.eventsocial.backend.dto;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import ar.com.eventsocial.backend.model.InmueblesReducido;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "code", "message" })
-public class PagosResponseDTO {
+public class InmuebleReducidoResponseDTO {
 
 	@JsonProperty("code")
 	private String code;
 	@JsonProperty("message")
 	private String message;
-	@JsonProperty("EstadoPago")
-	private String estadoPago;
-
+	@JsonProperty("inmuebles")
+	private List<InmueblesReducido> inmuebles;
 	
 	/*---- GETTER SETTER----*/
 	
@@ -34,12 +37,12 @@ public class PagosResponseDTO {
 		this.message = message;
 	}
 
-	public String getEstadoPago() {
-		return estadoPago;
+	public List<InmueblesReducido> getInmuebles() {
+		return inmuebles;
 	}
 
-	public void setEstadoPago(String estadoPago) {
-		this.estadoPago = estadoPago;
+	public void setInmuebles(List<InmueblesReducido> inmuebles) {
+		this.inmuebles = inmuebles;
 	}
 
 }

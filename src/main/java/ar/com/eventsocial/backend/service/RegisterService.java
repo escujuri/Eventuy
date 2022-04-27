@@ -1,30 +1,30 @@
-package ar.com.eventsocial.backend.service_;
+package ar.com.eventsocial.backend.service;
 
+import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ar.com.eventsocial.backend.dto.RegisterDTO;
 import ar.com.eventsocial.backend.dto.RegisterResponseDTO;
 import ar.com.eventsocial.backend.model.Login;
 import ar.com.eventsocial.backend.model.Usuario;
 import ar.com.eventsocial.backend.repository.contract.ILoginRepository;
-import ar.com.eventsocial.backend.repository.contract.IRegisterRepository;
+import ar.com.eventsocial.backend.repository.contract.ISengridRepository;
+import ar.com.eventsocial.backend.security.jwt.JwtRequestStep1;
 import ar.com.eventsocial.backend.service.contract.IRegisterService;
 
 @Service("RegisterService")
 public class RegisterService implements IRegisterService {
 
 	@Autowired
-	IRegisterRepository registerRepository;
-
-	@Autowired
 	private ILoginRepository loginRepository;
 
+	@Autowired
+	private ISengridRepository sengridRepository;
+
 	@Override
-	public RegisterResponseDTO Step1(String username, String pass, String email) {
+	public RegisterResponseDTO Step1(JwtRequestStep1 jwtRequestStep1) throws IOException {
 
 		int userSave = 0;
 
@@ -34,12 +34,13 @@ public class RegisterService implements IRegisterService {
 
 		Usuario user = new Usuario();
 
-		login.setUser_(username);
-		login.setPassword_(pass);
+		login.setPassword_(jwtRequestStep1.getPassword());
+		login.setEmail(jwtRequestStep1.getEmail());
 		login.setFecha_creacion(new Date());
-		user.setEmail(email);
 		login.setUsuario(user);
+
 		user.setLogin(login);
+		user.setNombre(jwtRequestStep1.getUsername());
 
 		try {
 			userSave = loginRepository.RegisterUser(login);
@@ -61,6 +62,12 @@ public class RegisterService implements IRegisterService {
 		response.setCode("200");
 		response.setMessage("Se registro correctamente");
 		response.setUserCaseId("usuario_guardado");
+
+		try {
+			sengridRepository.postSendEmail(jwtRequestStep1.getEmail());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 
 		return response;
 

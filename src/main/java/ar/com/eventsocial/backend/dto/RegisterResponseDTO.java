@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import ar.com.eventsocial.backend.model.Usuario;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "code", "message" })
 public class RegisterResponseDTO {
@@ -16,6 +18,7 @@ public class RegisterResponseDTO {
 	private String userCaseId;
 	@JsonProperty("sessionID")
 	private String sessionEnc;
+
 
 	public String getCode() {
 		return code;
@@ -48,5 +51,6 @@ public class RegisterResponseDTO {
 	public void setSessionEnc(String sessionEnc) {
 		this.sessionEnc = sessionEnc;
 	}
+
 
 }

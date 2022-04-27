@@ -20,10 +20,13 @@ import javax.persistence.TemporalType;
 @NamedNativeQueries({
 	@NamedNativeQuery(name = Login.LOGIN_USER, query = "select *"
 			+ "  from Usuario_Login" 
-			+ "  where usuario = ?", resultClass = Login.class),
+			+ "  where email = ?", resultClass = Login.class),
 	@NamedNativeQuery(name = Login.LOGIN_DUPLICATE_USER, query = "select *"
 			+ "  from Usuario_Login" 
-			+ "  where usuario = ?", resultClass = Login.class),
+			+ "  where email = ?", resultClass = Login.class),
+	@NamedNativeQuery(name = Login.EMAIL_BY_USERID, query = "select email"
+			+ "  from Usuario_Login" 
+			+ "  where id = ?", resultClass = Login.class),
 })
 
 
@@ -38,14 +41,15 @@ public class Login extends GenericEntity<Long> {
 
 	public static final String LOGIN_USER = "LoginByUser";
 	public static final String LOGIN_DUPLICATE_USER = "LoginByUserDuplicate";
+	public static final String EMAIL_BY_USERID = "EmailByUserId";
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
 	
-	@Column(name = "usuario")
-	private String user_;
+	@Column(name = "email")
+	private String email;
 
 	@Column(name = "pass")
 	private String password_;
@@ -61,6 +65,16 @@ public class Login extends GenericEntity<Long> {
 
 	}
 	
+	public String getEmail() {
+		return email;
+	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
 	public Long getId() {
 		return id;
 	}
@@ -69,9 +83,7 @@ public class Login extends GenericEntity<Long> {
 		this.id = id;
 	}
 
-	public String getUser_() {
-		return user_;
-	}
+
 
 	public String getPassword_() {
 		return password_;
@@ -79,10 +91,6 @@ public class Login extends GenericEntity<Long> {
 
 	public void setPassword_(String password_) {
 		this.password_ = password_;
-	}
-
-	public void setUser_(String user_) {
-		this.user_ = user_;
 	}
 
 
@@ -105,18 +113,20 @@ public class Login extends GenericEntity<Long> {
 		this.usuario = usuario;
 	}
 
-	public Login(String user_, String password_, Date fecha_creacion, Usuario usuario) {
+
+	public Login(Long id, String email, String password_, Date fecha_creacion, Usuario usuario) {
 		super();
-		this.user_ = user_;
+		this.id = id;
+		this.email = email;
 		this.password_ = password_;
 		this.fecha_creacion = fecha_creacion;
 		this.usuario = usuario;
 	}
 
+
 	@Override
 	public String toString() {
-		return "Login [id=" + id + ", user_=" + user_ + ", password_=" + password_ + ", fecha_creacion="
+		return "Login [id=" + id + ", email=" + email + ", password_=" + password_ + ", fecha_creacion="
 				+ fecha_creacion + ", usuario=" + usuario + "]";
 	}
-
 }

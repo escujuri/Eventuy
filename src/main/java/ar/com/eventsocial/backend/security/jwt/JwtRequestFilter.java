@@ -17,8 +17,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import ar.com.eventsocial.backend.logs.LogMaker;
-import ar.com.eventsocial.backend.service_.JwtUserDetailsService;
+import ar.com.eventsocial.backend.service.JwtUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
 
 
@@ -27,7 +26,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 	private static final Logger logger = LoggerFactory.getLogger(JwtRequestFilter.class);
 
-	public static final LogMaker log = new LogMaker();
+
 
 	@Autowired
 	private JwtUserDetailsService jwtUserDetailsService;

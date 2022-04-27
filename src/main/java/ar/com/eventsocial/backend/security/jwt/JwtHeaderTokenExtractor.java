@@ -3,10 +3,10 @@ package ar.com.eventsocial.backend.security.jwt;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.stereotype.Component;
-import org.apache.commons.lang3.StringUtils;
 
 @Component
 public class JwtHeaderTokenExtractor implements ITokenExtractor {

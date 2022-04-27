@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.com.eventsocial.backend.dto.InmuebleResponseDTO;
-import ar.com.eventsocial.backend.logs.LogMaker;
 import ar.com.eventsocial.backend.model.GenericUtils;
 import ar.com.eventsocial.backend.model.Inmuebles;
 import ar.com.eventsocial.backend.security.jwt.ITokenExtractor;
@@ -43,8 +42,6 @@ public class JwtInmueblesControllerV1 {
 	@Qualifier("jwtHeaderTokenExtractor")
 	private ITokenExtractor tokenExtractor;
 
-	public static final LogMaker log = new LogMaker();
-
 	@PreAuthorize("hasRole('USER')")
 	@RequestMapping(value = "/recuperar", method = RequestMethod.GET, produces = "application/json")
 	@ApiOperation(value = "Recurso que recupera los inmuebles de un usuario")
@@ -52,7 +49,6 @@ public class JwtInmueblesControllerV1 {
 	public ResponseEntity<InmuebleResponseDTO> RecuperarInmueble(HttpServletRequest request) throws Exception {
 
 		try {
-			log.infoRecibe("inmueble/recuperar", null);
 
 			String userId = "";
 			String usuario = "";
@@ -69,7 +65,8 @@ public class JwtInmueblesControllerV1 {
 				}
 			}
 
-			final InmuebleResponseDTO _response = InmuebleService.inmuebleByIdOriginante(usuario, Long.valueOf(userId));
+			final InmuebleResponseDTO _response = InmuebleService.getinmuebleByIdOriginante(usuario,
+					Long.valueOf(userId));
 
 			return new ResponseEntity<InmuebleResponseDTO>(_response, HttpStatus.OK);
 		} catch (Exception e) {
@@ -84,8 +81,6 @@ public class JwtInmueblesControllerV1 {
 	@ResponseBody
 	public ResponseEntity<InmuebleResponseDTO> GuardarInmueble(HttpServletRequest request,
 			@RequestBody(required = true) @Validated Inmuebles datosInmueble) throws Exception {
-
-		log.infoRecibe("inmueble/guardar", null);
 
 		String userId = "";
 		String usuario = "";
@@ -103,7 +98,7 @@ public class JwtInmueblesControllerV1 {
 		}
 
 		try {
-			final InmuebleResponseDTO _response = InmuebleService.guardarByIdOriginante(usuario, userId, datosInmueble);
+			final InmuebleResponseDTO _response = InmuebleService.saveByIdOriginante(usuario, userId, datosInmueble);
 			return new ResponseEntity<InmuebleResponseDTO>(_response, HttpStatus.OK);
 
 		} catch (Exception e) {
@@ -116,15 +111,12 @@ public class JwtInmueblesControllerV1 {
 	}
 
 	@PreAuthorize("hasRole('USER')")
-	@RequestMapping(value = "/actualizar/{idInmueble}/{idServicio}", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = "/actualizar/{idInmueble}", method = RequestMethod.POST, produces = "application/json")
 	@ApiOperation(value = "Recurso que actualiza un inmuebles y servicios  de un usuario")
 	@ResponseBody
 	public ResponseEntity<InmuebleResponseDTO> ActualizarInmueble(HttpServletRequest request,
 			@RequestBody(required = true) @Validated Inmuebles datosInmueble,
-			@PathVariable("idInmueble") String idInmueble, @PathVariable("idServicio") String idServicio)
-			throws Exception {
-
-		log.infoRecibe("inmueble/actualizar", null);
+			@PathVariable("idInmueble") String idInmueble) throws Exception {
 
 		String userId = "";
 		String usuario = "";
@@ -143,7 +135,7 @@ public class JwtInmueblesControllerV1 {
 
 		try {
 			final InmuebleResponseDTO _response = InmuebleService.actualizarByIdOriginante(usuario, userId, idInmueble,
-					idServicio, datosInmueble);
+					datosInmueble);
 			return new ResponseEntity<InmuebleResponseDTO>(_response, HttpStatus.OK);
 
 		} catch (Exception e) {
@@ -163,7 +155,6 @@ public class JwtInmueblesControllerV1 {
 			@PathVariable("idInmueble") String idInmueble) throws Exception {
 
 		try {
-			log.infoRecibe("inmueble/baja", null);
 
 			String userId = "";
 			String usuario = "";
@@ -180,7 +171,7 @@ public class JwtInmueblesControllerV1 {
 				}
 			}
 
-			final InmuebleResponseDTO _response = InmuebleService.bajayIdOriginante(userId,idInmueble);
+			final InmuebleResponseDTO _response = InmuebleService.deleteByIdOriginante(userId, idInmueble);
 
 			return new ResponseEntity<InmuebleResponseDTO>(_response, HttpStatus.OK);
 		} catch (Exception e) {
